@@ -1,0 +1,36 @@
+Project structure:
+`
+.
+├── Cargo.lock
+├── Cargo.toml
+├── README
+├── src
+│   ├── config.rs
+│   ├── data_extractor.rs
+│   ├── lib.rs
+│   ├── main.rs
+│   ├── minute_extractor.rs
+│   ├── processor.rs
+│   ├── poly_agg_info.rs
+│   ├── ticker_manager.rs
+│   └── session.rs
+├── target
+
+└── tests
+    ├── minute_extractor_tests.rs
+    ├── processor_tests.rs
+    ├── ticker_manager_tests.rs
+    └── session_tests.rs
+`
+When I make requests to the api - at first I can see a significant increase in the Data received in mb from the network. But after a certain point (about 20 seconds, can vary) - there's a drop to kb of data received from the network. Please see how can we make it so that the Data received is in mb and is consistent (which seems to be caused by an overload on the network). By the way, I asked how many requests per second the server can handle and I was told that around 100 should work just fine.
+
+
+
+After pasting the provided solution - I receive the following errors:
+1. `cannot subtract `f64` from `polars::prelude::AnyValue<'_>` [E0369]` - for `let mad = col.iter().map(|val| (val - median).abs()).median().unwrap();`
+2. `no method named `with_columns` found for struct `polars::prelude::DataFrame` in the current scope [E0599] Help: there is a method with a similar name` - for `self.df = self.df.with_columns(vec![p1, p2]).unwrap();`
+3. `a value of type `polars::prelude::ChunkedArray<polars::prelude::UInt32Type>` cannot be built from an iterator over elements of type `{integer}` [E0277] value of type `polars::prelude::ChunkedArray<polars::prelude::UInt32Type>` cannot be built from `std::iter::Iterator<Item={integer}>` Help: the trait `std::iter::FromIterator<{integer}>` is not implemented for `polars::prelude::ChunkedArray<polars::prelude::UInt32Type>` Help: the following other types implement trait `std::iter::FromIterator<A>`: <polars::prelude::ChunkedArray<polars::prelude::ListType> as std::iter::FromIterator<std::option::Option<std::boxed::Box<(dyn polars::export::polars_arrow::array::Array + 'static)>>>> <polars::prelude::ChunkedArray<polars::prelude::ListType> as std::iter::FromIterator<std::option::Option<polars::prelude::Series>>> <polars::prelude::ChunkedArray<polars::prelude::ListType> as std::iter::FromIterator<Ptr>> <polars::prelude::ChunkedArray<polars::prelude::StringType> as std::iter::FromIterator<std::option::Option<Ptr>>> <polars::prelude::ChunkedArray<polars::prelude::StringType> as std::iter::FromIterator<Ptr>> <polars::prelude::ChunkedArray<polars::prelude::BinaryType> as std::iter::FromIterator<std::option::Option<Ptr>>> <polars::prelude::ChunkedArray<polars::prelude::BinaryType> as std::iter::FromIterator<Ptr>> <polars::prelude::ChunkedArray<polars::prelude::BooleanType> as std::iter::FromIterator<bool>> and 3 others Note: the method call chain might not have had the expected associated types Note: required by a bound in `std::iter::Iterator::collect`` - for `.collect::<UInt32Chunked>()`
+4. `the trait bound `&mut polars::prelude::Series: polars::prelude::IntoSeries` is not satisfied [E0277] the trait `polars::prelude::IntoSeries` is not implemented for `&mut polars::prelude::Series` Help: the trait `polars::prelude::IntoSeries` is implemented for `polars::prelude::Series` Note: required by a bound in `polars::prelude::DataFrame::new`` - for `let predictions_df = DataFrame::new(vec![mad_p1_predictions, mad_p2_predictions])?;`
+5. `` - for ``
+6. `` - for ``
+7. `` - for ``
